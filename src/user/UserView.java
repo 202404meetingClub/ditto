@@ -135,6 +135,8 @@ public class UserView {
                     myDitto(user);
                     break;
                 case "5":
+                    System.out.println("프로그램을 종료합니다.");
+                    return;
                 default:
                     System.out.println("올바른 메뉴를 입력하세요.");
             }
@@ -144,8 +146,9 @@ public class UserView {
     } // showMainMenu 종료
 
     private static void showMyPage(User user) {
-
+        MypageMenu();
     } // showMyPage 종료
+
 
     private static void makeDitto(User user) {
 
@@ -159,5 +162,35 @@ public class UserView {
 
     } // myDitto 종료
 
+    private static void MypageMenu() {
+        while (true) {
+            System.out.println("=====================");
+            System.out.println("1. 회원정보 수정");   // view 레파지토리
+            System.out.println("2. 입 * 출금하기");  //  뷰
+            System.out.println("3. 잔액조회");       //  뷰
+            System.out.println("4. 회원탈퇴");  // view 뷰안에서 삭제하는걸 레파지토리
+            System.out.println("5. 뒤로가기");
+            String userInput = si.input(">> ");
+            switch(userInput){
+                case"1":
+                    modifiyInfo();
+                    break;
+                case"2":
+                    break;
+                case"3":
+                    break;
+                case"4":
+                    break;
+                case"5":
+                    break;
+                default:
+                    System.out.println("숫자를 입력하세여");
+            }
+        }
+    }
+
+    private static void modifiyInfo() {
+
+    }
 
 } // class 종료
