@@ -67,4 +67,30 @@ public class UserRepository {
     }
 
 
+    public User findById(String inputId) {
+
+        for (User user : userList) {
+            if(user.getId().equals(inputId)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public User findByPassword(String inputPassword) {
+        for (User user : userList) {
+            if(user.getId().equals(inputPassword)) {
+                return user;
+            }
+        }
+        return null;
+
+    }
+
+    public void removeUser(String inputId) {
+        int index = userList.indexOf(inputId);
+        if(index == -1) return;
+        User remove = userList.remove(index);
+
+    }
 }
