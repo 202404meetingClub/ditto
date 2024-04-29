@@ -151,7 +151,7 @@ public class UserRepository {
         return null;
     }
 
-    public void delteUser(String inputId) {
+    public void deleteUser(String inputId) {
         User user = null;
         userList.remove(user);
     }
