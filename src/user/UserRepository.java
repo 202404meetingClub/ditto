@@ -118,6 +118,7 @@ public class UserRepository {
     public User searchUser(String userInput) {
         for (User user : userList) {
             if (user.getId().equals(userInput) || user.getName().equals(userInput)) {
+                return user;
             }
         }
         return null;
@@ -133,9 +134,11 @@ public class UserRepository {
         return null;
     }
 
-
     public User checkAdmin(String id) {
-        List<User> checkedId = admin.stream().filter(user -> user.getId().equals(id)).collect(Collectors.toList());
+        List<User> checkedId = admin
+                .stream()
+                .filter(user -> user.getId().equals(id))
+                .collect(Collectors.toList());
         if (checkedId.size() == 1) {
             return checkedId.get(0);
         }
@@ -148,13 +151,9 @@ public class UserRepository {
         return null;
     }
 
-    public void removeUser(String inputId) {
-        for (User user : userList) {
-            if (user.getId().equals(inputId)) {
-                userList.remove(user);
-                return;
-            }
-        }
+    public void delteUser(String inputId) {
+        User user = null;
+        userList.remove(user);
     }
 }
 
