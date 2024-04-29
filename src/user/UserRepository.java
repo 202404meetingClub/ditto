@@ -43,7 +43,6 @@ public class UserRepository {
             return checkedId.get(0);
         }
         return null;
-
     }
 
     public User checkPassword(User user, String password) {
@@ -66,6 +65,17 @@ public class UserRepository {
             }
         }
         userList.add(new User(name, id, password, age, userAccount));
+    }
+
+
+    public User findById(String inputId) {
+
+        for (User user : userList) {
+            if(user.getId().equals(inputId)) {
+                return user;
+            }
+        }
+        return null;
 
     }
 
@@ -91,7 +101,24 @@ public class UserRepository {
                 return;
             }
         }
+
     }
 
+    public User findByPassword(String inputPassword) {
+        for (User user : userList) {
+            if(user.getPassword().equals(inputPassword)) {
+                return user;
+            }
+        }
+        return null;
+    }
 
+    public void removeUser(String inputId) {
+        for (User user : userList) {
+            if(user.getId().equals(inputId)) {
+                userList.remove(user);
+                return;
+            }
+        }
+    }
 }

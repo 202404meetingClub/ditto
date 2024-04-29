@@ -2,6 +2,8 @@ package user;
 
 import util.SimpleInput;
 
+import java.util.List;
+
 public class UserView {
 
     static SimpleInput si = new SimpleInput();
@@ -169,14 +171,21 @@ public class UserView {
         outer:
         while (true) {
             System.out.println("=====================");
-            System.out.println("1. 회원정보 수정");   // view 레파지토리
-            System.out.println("2. 입 * 출금하기");  //  뷰
-            System.out.println("3. 잔액조회");       //  뷰
-            System.out.println("4. 회원탈퇴");  // view 뷰안에서 삭제하는걸 레파지토리
-            System.out.println("5. 뒤로가기");
+            System.out.println("1. 회원정보 조회");
+            System.out.println("2. 회원정보 수정");   // view 레파지토리
+            System.out.println("3. 입 * 출금하기");  //  뷰
+            System.out.println("4. 잔액조회");       //  뷰
+            System.out.println("5. 회원탈퇴");  // view 뷰안에서 삭제하는걸 레파지토리
+            System.out.println("6. 뒤로가기");
             String userInput = si.input(">> ");
             switch (userInput) {
                 case "1":
+                    getUser();
+                    break;
+                case "2":
+                    modifiyInfo();
+                    break;
+                case "3":
                     modifiyInfo();
                     break;
                 case "2":
@@ -188,6 +197,9 @@ public class UserView {
                 case "4":
                     break;
                 case "5":
+                    deleteUser();
+                    break;
+                case "6":
                     break outer;
                 default:
                     System.out.println("숫자를 입력하세요");
@@ -213,6 +225,25 @@ public class UserView {
                 case "3" :
                     break outer;
                 default:
+                    System.out.println("올바른 번호를 입력하세요.");
+            }
+        }
+    }
+
+    private static void deleteUser() {
+        String inputId = si.input("삭제할 회원의 아이디를 입력하세요.\n>>  ");
+
+        User foundUser = ur.findById(inputId);
+        if (foundUser != null) {
+            String inputPassword = si.input("비밀번호를 입력하세요.\n>>  ");
+            if (inputPassword.equals(foundUser.getPassword())) {
+                ur.removeUser(inputId);
+                System.out.printf("# %s님의 회원정보가 삭제되었습니다.\n", foundUser.getName());
+            } else {
+                System.out.println("\n# 비밀번호가 일치하지 않습니다. 탈퇴를 취소합니다.");
+            }
+        } else {
+            System.out.println("\n# 해당 회원은 존재하지 않습니다.");
                     System.out.println("잘못된 번호를 입력하셨습니다.");
             }
 
@@ -297,6 +328,52 @@ public class UserView {
     }
 
     private static void modifiyInfo() {
+        String inputId = si.input("수정할 회원의 아이디를 입력하세요.\n>>  ");
+
+        User foundUser = ur.findById(inputId);
+        if (foundUser != null) {
+            String inputPassword = si.input("비밀번호를 입력하세요.\n>>  ");
+            User foundUserPassword = ur.findByPassword(inputPassword);
+            if (foundUserPassword != null) {
+
+                System.out.printf("# %s님의 비밀번호를 변경합니다.\n", foundUserPassword.getName());
+                String newPassword = si.input("# 새 비밀번호: ");
+
+                foundUserPassword.changePassword(newPassword);
+
+                System.out.println("# 비밀번호 변경이 완료되었습니다.");
+            } else {
+                System.out.println("\n# 비밀번호를 확인해주세요.");
+            }
+        } else {
+            System.out.println("\n# 해당 회원은 존재하지 않습니다.");
+        }
+    }
+
+    private static void getUser() {
+        String inputId = si.input("# 조회하실 회원의 아이디를 입력하세요.\n>> ");
+        User foundUser = ur.findById(inputId);
+
+        if (foundUser != null) {
+
+            String inputPassword = si.input("비밀번호를 입력하세요.\n>> ");
+            User foundUserPassword = ur.findByPassword(inputPassword);
+            if (foundUserPassword != null) {
+                System.out.println("========== 조회 결과 ==========");
+                System.out.println("# 이름: " + foundUser.getName());
+                System.out.println("# 아이디: " + foundUser.getId());
+                System.out.println("# 비밀번호: " + foundUser.getPassword());
+                System.out.println("# 나이: " + foundUser.getAge());
+                System.out.println("# 계좌: " + foundUser.getAccount());
+                System.out.println("# 잔액: " + foundUser.getMoney());
+                System.out.println();
+            } else {
+                System.out.println("\n# 잘못된 비밀번호입니다.");
+            }
+
+        } else {
+            System.out.println("\n# 해당 회원은 존재하지 않습니다.");
+        }
 
     }
 
