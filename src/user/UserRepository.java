@@ -39,7 +39,6 @@ public class UserRepository {
             return checkedId.get(0);
         }
         return null;
-
     }
 
     public User checkPassword(User user, String password) {
@@ -62,10 +61,7 @@ public class UserRepository {
             }
         }
         userList.add(new User(name, id, password, age, userAccount));
-
-
     }
-
 
     public User findById(String inputId) {
 
@@ -79,18 +75,19 @@ public class UserRepository {
 
     public User findByPassword(String inputPassword) {
         for (User user : userList) {
-            if(user.getId().equals(inputPassword)) {
+            if(user.getPassword().equals(inputPassword)) {
                 return user;
             }
         }
         return null;
-
     }
 
     public void removeUser(String inputId) {
-        int index = userList.indexOf(inputId);
-        if(index == -1) return;
-        User remove = userList.remove(index);
-
+        for (User user : userList) {
+            if(user.getId().equals(inputId)) {
+                userList.remove(user);
+                return;
+            }
+        }
     }
 }

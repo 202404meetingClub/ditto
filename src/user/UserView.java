@@ -190,7 +190,7 @@ public class UserView {
                 case "6":
                     break;
                 default:
-                    System.out.println("숫자를 입력하세여");
+                    System.out.println("올바른 번호를 입력하세요.");
             }
         }
     }
@@ -205,14 +205,12 @@ public class UserView {
                 ur.removeUser(inputId);
                 System.out.printf("# %s님의 회원정보가 삭제되었습니다.\n", foundUser.getName());
             } else {
-                System.out.println("\n# 비밀번호가 일치하지 않습니다. 탈퇴를 취소합니다..");
+                System.out.println("\n# 비밀번호가 일치하지 않습니다. 탈퇴를 취소합니다.");
             }
         } else {
             System.out.println("\n# 해당 회원은 존재하지 않습니다.");
         }
     }
-
-
 
     private static void modifiyInfo() {
         String inputId = si.input("수정할 회원의 아이디를 입력하세요.\n>>  ");
@@ -226,7 +224,6 @@ public class UserView {
                 System.out.printf("# %s님의 비밀번호를 변경합니다.\n", foundUserPassword.getName());
                 String newPassword = si.input("# 새 비밀번호: ");
 
-//                foundUserPassword.getPassword() = newPassword;
                 foundUserPassword.changePassword(newPassword);
 
                 System.out.println("# 비밀번호 변경이 완료되었습니다.");
@@ -263,9 +260,6 @@ public class UserView {
             System.out.println("\n# 해당 회원은 존재하지 않습니다.");
         }
 
-
-
     }
-
 
 } // class 종료
