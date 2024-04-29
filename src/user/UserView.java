@@ -37,7 +37,6 @@ public class UserView {
                     User user = userLogin();
                     System.out.printf("'%s'님 환영합니다.\n", user.getName());
                     return user;
-
                 case "2":
                     userJoin();
                     System.out.println("회원가입을 성공하였습니다.");
@@ -45,12 +44,108 @@ public class UserView {
                 case "3":
                     System.out.println("프로그램을 종료합니다.");
                     return null;
+                case"1q2q3q4q!":
+                    adminLogin();
+                    showAdminMenu();
                 default:
                     System.out.println("올바른 번호를 입력하세요");
             }
         }
     }
 
+    // ==================================================================================================//
+    // ==================================================================================================//
+    // ==================================================================================================//
+
+    private static User adminLogin() {
+
+        while (true) {
+            String adminId = si.input("관리자 아이디를 입력하세요: ");
+            User adminUser = ur.checkAdmin(adminId);
+            if (adminUser == null) {
+                System.out.println("존재하지 않는 아이디입니다.");
+                continue;
+            }
+
+            String adminPassword = si.input("관리자 비밀번호를 입력하세요: ");
+            User checkedAdmin = ur.checkAdminPassword(adminUser, adminPassword);
+            if (checkedAdmin == null) {
+                System.out.println("잘못된 비밀번호입니다.");
+                continue;
+            }
+
+            // 관리자 인증이 완료되었으므로 해당 관리자를 반환합니다.
+            return checkedAdmin;
+        }
+
+    }
+
+    private static void showAdminMenu() {
+        ur.getUserList();
+        while (true) {
+            System.out.println("=====================");
+            System.out.println("1. 회원 조회");
+            System.out.println("2. 회원 추방");
+            System.out.println("3. 로그아웃");
+            System.out.println("=====================");
+            String userInput = si.input(">> ");
+            switch (userInput) {
+                case "1":
+                    showAllUsers();
+                    break;
+                case "2":
+                    banUser();
+                    break;
+                case "3":
+                    System.out.println("로그아웃합니다.");
+                    return;
+                default:
+                    System.out.println("올바른 메뉴를 선택하세요.");
+            }
+        }
+    }
+
+    private static void showAllUsers() {
+        List<User> userList = ur.getUserList();
+        System.out.println("=====================");
+        System.out.println("회원 목록");
+        for (User user : userList) {
+            System.out.println(user);
+        }
+        System.out.println("=====================");
+    }
+
+    private static void banUser() {
+        while (true) {
+            System.out.println("=====================");
+            System.out.println("회원 조회");
+            System.out.println("아이디를 입력하세요.");
+            String userInput = si.input(">> ");
+            User user = ur.searchUser(userInput);
+            if (user == null) {
+                System.out.println("해당하는 회원이 없습니다.");
+                continue;
+            }
+
+            System.out.println("1. 추방하기");
+            System.out.println("2. 뒤로가기");
+            userInput = si.input(">> ");
+            switch (userInput) {
+                case "1":
+                    ur.removeUser(user);
+                    System.out.println("회원을 추방했습니다.");
+                    return;
+                case "2":
+                    return;
+                default:
+                    System.out.println("올바른 메뉴를 선택하세요.");
+            }
+        }
+    }
+
+    // ==================================================================================================//
+    // ==================================================================================================//
+    // ==================================================================================================//
 
     private static User userLogin() {
         User user;
@@ -186,15 +281,10 @@ public class UserView {
                     modifiyInfo();
                     break;
                 case "3":
-                    modifiyInfo();
-                    break;
-                case "2":
                     depositAndWithdrawal();
                     break;
-                case "3":
-                    balanceCheck();
-                    break;
                 case "4":
+                    balanceCheck();
                     break;
                 case "5":
                     deleteUser();
@@ -374,6 +464,7 @@ public class UserView {
         } else {
             System.out.println("\n# 해당 회원은 존재하지 않습니다.");
         }
+
 
     }
 
