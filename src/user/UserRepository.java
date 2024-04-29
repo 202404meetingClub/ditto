@@ -86,22 +86,7 @@ public class UserRepository {
 
 
 
-    /**
-     * 사용자 정보를 업데이트하는 메서드.
-     * 주어진 사용자 정보와 동일한 ID를 가진 사용자를 찾아 업데이트.
-     *
-     * @param user 업데이트할 사용자 객체
-     **/
 
-    public static void updateUser(User user) {
-        // 사용자 목록을 반복하면서 주어진 사용자의 ID와 일치하는 사용자를 찾기
-        for (User u : userList) {
-            if (u.getId().equals(user.getId())) {
-                userList.set(userList.indexOf(u), user);
-                return;
-            }
-        }
-    }
 
     /**
      * 사용자 정보를 업데이트하는 메서드.

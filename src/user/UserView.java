@@ -280,10 +280,10 @@ public class UserView {
                     modifyInfo(user);
                     break;
                 case "3":
-                    depositAndWithdrawal();
+                    depositAndWithdrawal(user);
                     break;
                 case "4":
-                    balanceCheck();
+                    balanceCheck(user);
                     break;
                 case "5":
                     deleteUser(user);
@@ -297,7 +297,7 @@ public class UserView {
     }
 
 
-    private static void depositAndWithdrawal() {
+    private static void depositAndWithdrawal(User user) {
         outer:
         while (true) {
             System.out.println("1. 입금하기");
@@ -306,10 +306,10 @@ public class UserView {
             String userInput = si.input(">> ");
             switch (userInput) {
                 case "1":
-                    deposit();
+                    deposit(user);
                     break;
                 case "2":
-                    withdrawal();
+                    withdrawal(user);
                     break;
                 case "3":
                     break outer;
@@ -334,7 +334,7 @@ public class UserView {
 
 
     // 입금 기능을 수행하는 메서드
-    private static void deposit() {
+    private static void deposit(User user) {
         System.out.println("입금할 금액을 입력하세요.");
         int deposit;
         // 사용자가 유효한 금액을 입력할 때까지 반복하여 입력을 받기.
@@ -351,24 +351,13 @@ public class UserView {
             }
         }
 
-
-        // 로그인 된 사용자 가져오기
-        User currentUser = ur.getCurrentUser();
-        // 로그인된 사용자가 없는 경우 메시지를 출력하고 메서드를 종료.
-        if (currentUser == null) {
-            System.out.println("로그인 후 이용해주세요.");
-            return;
-        }
-
         // 사용자의 잔액에 입력받은 금액 추가
-        currentUser.setMoney(currentUser.getMoney() + deposit);
+        user.setMoney(user.getMoney() + deposit);
         System.out.printf("%d원이 입금되었습니다.\n", deposit);
-        // 사용자 정보를 업데이트.
-        ur.updateUser(currentUser);
     }
 
     // 출금 기능을 수행하는 메서드.
-    private static void withdrawal() {
+    private static void withdrawal(User user) {
         System.out.println("출금할 금액을 입력하세요.");
         int withdrawal;
         while (true) {
@@ -384,17 +373,11 @@ public class UserView {
             }
         }
 
-        // 로그인 된 사용자 가져오기
-        User currentUser = ur.getCurrentUser();
-        if (currentUser == null) {
-            System.out.println("로그인 후 이용해주세요.");
-            return;
-        }
+
         // 출금할 금액이 사용자의 잔액보다 크거나 같은지 확인.
-        if (currentUser.getMoney() >= withdrawal) {
-            currentUser.setMoney(currentUser.getMoney() - withdrawal);
+        if (user.getMoney() >= withdrawal) {
+            user.setMoney(user.getMoney() - withdrawal);
             System.out.printf("%d원이 출금되었습니다.\n", withdrawal);
-            ur.updateUser(currentUser);
         } else {
             System.out.println("잔액이 부족합니다.");
         }
@@ -402,14 +385,9 @@ public class UserView {
     }
 
     // 잔액 조회 기능을 수행하는 메서드.
-    private static void balanceCheck() {
-        User currentUser = ur.getCurrentUser();
-        if (currentUser == null) {
-            System.out.println("로그인 후 이용해주세요.");
-            return;
-        }
+    private static void balanceCheck(User user) {
 
-        System.out.printf("현재 잔액 : %s원\n", currentUser.getMoney());
+        System.out.printf("현재 잔액 : %s원\n", user.getMoney());
     }
 
     private static void modifyInfo(User user) {
