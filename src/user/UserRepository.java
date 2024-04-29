@@ -13,6 +13,7 @@ public class UserRepository {
     private static List<User> admin;
 
 
+
     static {
         userList = new ArrayList<>();
         admin = new ArrayList<>();
@@ -46,7 +47,6 @@ public class UserRepository {
             return checkedId.get(0);
         }
         return null;
-
     }
 
     public User checkPassword(User user, String password) {
@@ -69,6 +69,28 @@ public class UserRepository {
             }
         }
         userList.add(new User(name, id, password, age, userAccount));
+    }
+
+
+    public User findById(String inputId) {
+
+        for (User user : userList) {
+            if(user.getId().equals(inputId)) {
+                return user;
+            }
+        }
+        return null;
+
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User user) {
+        currentUser = user;
+    }
+
 
     }
 
@@ -94,11 +116,23 @@ public class UserRepository {
                 return;
             }
         }
+
+    /**
+     * 사용자 정보를 업데이트하는 메서드.
+     * 주어진 사용자 정보와 동일한 ID를 가진 사용자를 찾아 업데이트.
+     * @param user 업데이트할 사용자 객체
+     **/
+
+    public static void updateUser(User user) {
+        // 사용자 목록을 반복하면서 주어진 사용자의 ID와 일치하는 사용자를 찾기
+        for (User u : userList) {
+            if (u.getId().equals(user.getId())) {
+                userList.set(userList.indexOf(u), user);
+                return;
+            }
+        }
     }
 
-    // ==================================================================================================//
-    // ==================================================================================================//
-    // ==================================================================================================//
 
     public void removeUser(User user) {
         userList.remove(user);
@@ -107,6 +141,11 @@ public class UserRepository {
     public User searchUser(String userInput) {
         for (User user : userList) {
             if (user.getId().equals(userInput) || user.getName().equals(userInput)) {
+              
+    public User findByPassword(String inputPassword) {
+        for (User user : userList) {
+            if(user.getPassword().equals(inputPassword)) {
+
                 return user;
             }
         }
@@ -130,4 +169,12 @@ public class UserRepository {
         return null;
     }
 
+    public void removeUser(String inputId) {
+        for (User user : userList) {
+            if(user.getId().equals(inputId)) {
+                userList.remove(user);
+                return;
+            }
+        }
+    }
 }
