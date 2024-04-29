@@ -13,11 +13,13 @@ public class UserView {
 
     public static void start() {
         showLogo();
-        User loginedUser = showLoginPage();
-        if (loginedUser == null) {
-            return;
+        while (true) {
+            User loginedUser = showLoginPage();
+            if (loginedUser == null) {
+                return;
+            }
+            showMainMenu(loginedUser);
         }
-        showMainMenu(loginedUser);
     }
 
 
@@ -208,13 +210,14 @@ public class UserView {
 
 
     private static void showMainMenu(User user) {
+        outer:
         while (true) {
             System.out.println("====================="); // 나중에 유저관련 메시지를 넣을 수 있음
             System.out.println("1. 마이페이지");
             System.out.println("2. 모임 만들기");
             System.out.println("3. 모임 참여하기");
             System.out.println("4. 내 모임 조회하기");
-            System.out.println("5. 프로그램 종료");
+            System.out.println("5. 뒤로가기");
             System.out.println("=====================");
             String userInput = si.input(">> ");
             switch (userInput) {
@@ -231,8 +234,8 @@ public class UserView {
                     myDitto(user);
                     break;
                 case "5":
-                    System.out.println("프로그램을 종료합니다.");
-                    return;
+//                    System.out.println("프로그램을 종료합니다.");
+                    break outer;
                 default:
                     System.out.println("올바른 메뉴를 입력하세요.");
             }
