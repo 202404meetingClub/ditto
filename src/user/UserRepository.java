@@ -7,6 +7,10 @@ import java.util.stream.Collectors;
 public class UserRepository {
 
     private static List<User> userList;
+    // currentUser 의 경우 static 으로 설정하게 되면 전체적으로 공유가 되기때문에
+    // 여러명이 로그인 할 수 없고 한 사용자만 로그인이 가능함
+    private User currentUser;
+
 
     static {
         userList = new ArrayList<>();
@@ -63,7 +67,30 @@ public class UserRepository {
         }
         userList.add(new User(name, id, password, age, userAccount));
 
+    }
 
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User user) {
+        currentUser = user;
+    }
+
+    /**
+     * 사용자 정보를 업데이트하는 메서드.
+     * 주어진 사용자 정보와 동일한 ID를 가진 사용자를 찾아 업데이트.
+     * @param user 업데이트할 사용자 객체
+     **/
+
+    public static void updateUser(User user) {
+        // 사용자 목록을 반복하면서 주어진 사용자의 ID와 일치하는 사용자를 찾기
+        for (User u : userList) {
+            if (u.getId().equals(user.getId())) {
+                userList.set(userList.indexOf(u), user);
+                return;
+            }
+        }
     }
 
 
