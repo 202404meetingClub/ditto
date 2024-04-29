@@ -45,7 +45,7 @@ public class UserView {
                 case "3":
                     System.out.println("프로그램을 종료합니다.");
                     return null;
-                case"1q2q3q4q!":
+                case "1q2q3q4q!":
                     adminLogin();
                     showAdminMenu();
                 default:
@@ -54,9 +54,6 @@ public class UserView {
         }
     }
 
-    // ==================================================================================================//
-    // ==================================================================================================//
-    // ==================================================================================================//
 
     private static User adminLogin() {
 
@@ -182,9 +179,7 @@ public class UserView {
         String userId; // 여기는 중복검증 해야함
         while (true) {
             String inputId = si.input("아이디 : ");
-            boolean flag = ur.getUserList()
-                    .stream()
-                    .anyMatch(user -> user.getId().equals(inputId));
+            boolean flag = ur.getUserList().stream().anyMatch(user -> user.getId().equals(inputId));
             if (!flag) {
                 userId = inputId;
                 break;
@@ -306,14 +301,14 @@ public class UserView {
             System.out.println("2. 출금하기");
             System.out.println("3. 뒤로가기");
             String userInput = si.input(">> ");
-            switch(userInput) {
-                case "1" :
+            switch (userInput) {
+                case "1":
                     deposit();
                     break;
-                case "2" :
+                case "2":
                     withdrawal();
                     break;
-                case "3" :
+                case "3":
                     break outer;
                 default:
                     System.out.println("올바른 번호를 입력하세요.");
@@ -335,11 +330,11 @@ public class UserView {
             }
         } else {
             System.out.println("\n# 해당 회원은 존재하지 않습니다.");
-                    System.out.println("잘못된 번호를 입력하셨습니다.");
-            }
-
+            System.out.println("잘못된 번호를 입력하셨습니다.");
         }
+
     }
+
 
     // 입금 기능을 수행하는 메서드
     private static void deposit() {
@@ -358,6 +353,7 @@ public class UserView {
                 System.out.println("숫자로 입력해 주세요.");
             }
         }
+
 
         // 로그인 된 사용자 가져오기
         User currentUser = ur.getCurrentUser();
@@ -402,11 +398,12 @@ public class UserView {
             currentUser.setMoney(currentUser.getMoney() - withdrawal);
             System.out.printf("%d원이 출금되었습니다.\n", withdrawal);
             ur.updateUser(currentUser);
-        } else{
+        } else {
             System.out.println("잔액이 부족합니다.");
         }
 
     }
+
     // 잔액 조회 기능을 수행하는 메서드.
     private static void balanceCheck() {
         User currentUser = ur.getCurrentUser();
@@ -469,4 +466,4 @@ public class UserView {
 
     }
 
-} // class 종료
+}

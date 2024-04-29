@@ -13,7 +13,6 @@ public class UserRepository {
     private static List<User> admin;
 
 
-
     static {
         userList = new ArrayList<>();
         admin = new ArrayList<>();
@@ -33,16 +32,11 @@ public class UserRepository {
 
     @Override
     public String toString() {
-        return "UserRepository{" +
-                "userList=" + userList +
-                '}';
+        return "UserRepository{" + "userList=" + userList + '}';
     }
 
     public User checkId(String id) {
-        List<User> checkedId = userList
-                .stream()
-                .filter(user -> user.getId().equals(id))
-                .collect(Collectors.toList());
+        List<User> checkedId = userList.stream().filter(user -> user.getId().equals(id)).collect(Collectors.toList());
         if (checkedId.size() == 1) {
             return checkedId.get(0);
         }
@@ -60,9 +54,7 @@ public class UserRepository {
             int randomNumber = (int) Math.floor(Math.random() * 1000000);
             String randomAccount = "602" + Integer.toString(randomNumber);
 
-            boolean flag = userList
-                    .stream()
-                    .anyMatch(user -> user.getAccount().equals(randomAccount));
+            boolean flag = userList.stream().anyMatch(user -> user.getAccount().equals(randomAccount));
             if (!flag) {
                 userAccount = randomAccount;
                 break;
@@ -75,7 +67,7 @@ public class UserRepository {
     public User findById(String inputId) {
 
         for (User user : userList) {
-            if(user.getId().equals(inputId)) {
+            if (user.getId().equals(inputId)) {
                 return user;
             }
         }
@@ -92,34 +84,12 @@ public class UserRepository {
     }
 
 
-    }
 
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    public void setCurrentUser(User user) {
-        currentUser = user;
-    }
 
     /**
      * 사용자 정보를 업데이트하는 메서드.
      * 주어진 사용자 정보와 동일한 ID를 가진 사용자를 찾아 업데이트.
-     * @param user 업데이트할 사용자 객체
-     **/
-
-    public static void updateUser(User user) {
-        // 사용자 목록을 반복하면서 주어진 사용자의 ID와 일치하는 사용자를 찾기
-        for (User u : userList) {
-            if (u.getId().equals(user.getId())) {
-                userList.set(userList.indexOf(u), user);
-                return;
-            }
-        }
-
-    /**
-     * 사용자 정보를 업데이트하는 메서드.
-     * 주어진 사용자 정보와 동일한 ID를 가진 사용자를 찾아 업데이트.
+     *
      * @param user 업데이트할 사용자 객체
      **/
 
@@ -132,6 +102,13 @@ public class UserRepository {
             }
         }
     }
+
+    /**
+     * 사용자 정보를 업데이트하는 메서드.
+     * 주어진 사용자 정보와 동일한 ID를 가진 사용자를 찾아 업데이트.
+     *
+     * @param user 업데이트할 사용자 객체
+     **/
 
 
     public void removeUser(User user) {
@@ -141,10 +118,14 @@ public class UserRepository {
     public User searchUser(String userInput) {
         for (User user : userList) {
             if (user.getId().equals(userInput) || user.getName().equals(userInput)) {
-              
+            }
+        }
+        return null;
+    }
+
     public User findByPassword(String inputPassword) {
         for (User user : userList) {
-            if(user.getPassword().equals(inputPassword)) {
+            if (user.getPassword().equals(inputPassword)) {
 
                 return user;
             }
@@ -152,11 +133,9 @@ public class UserRepository {
         return null;
     }
 
+
     public User checkAdmin(String id) {
-        List<User> checkedId = admin
-                .stream()
-                .filter(user -> user.getId().equals(id))
-                .collect(Collectors.toList());
+        List<User> checkedId = admin.stream().filter(user -> user.getId().equals(id)).collect(Collectors.toList());
         if (checkedId.size() == 1) {
             return checkedId.get(0);
         }
@@ -171,10 +150,12 @@ public class UserRepository {
 
     public void removeUser(String inputId) {
         for (User user : userList) {
-            if(user.getId().equals(inputId)) {
+            if (user.getId().equals(inputId)) {
                 userList.remove(user);
                 return;
             }
         }
     }
 }
+
+
