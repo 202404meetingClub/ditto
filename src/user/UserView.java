@@ -8,6 +8,7 @@ public class UserView {
 
     static SimpleInput si = new SimpleInput();
     private static UserRepository ur = new UserRepository();
+    private static DittoView dv = new DittoView();
 
 
     public static void start() {
@@ -251,7 +252,7 @@ public class UserView {
 
 
     private static void makeDitto(User user) {
-
+        dv.makeDitto(user);
     } // makeDitto 종료
 
     private static void joinDitto(User user) {
