@@ -429,7 +429,7 @@ public class UserView {
 
         String inputPassword = si.input("비밀번호를 입력하세요.\n>>  ");
         if (inputPassword.equals(user.getPassword())) {
-            ur.deleteUser(inputPassword);
+            ur.deleteUser(user);
             System.out.printf("# %s님의 회원정보가 삭제되었습니다.\n", user.getName());
         } else {
             System.out.println("\n# 비밀번호가 일치하지 않습니다. 탈퇴를 취소합니다.");

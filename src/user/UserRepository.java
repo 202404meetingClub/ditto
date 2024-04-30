@@ -128,8 +128,7 @@ public class UserRepository {
         return null;
     }
 
-    public void deleteUser(String inputId) {
-        User user = null;
+    public void deleteUser(User user) {
         userList.remove(user);
     }
 }
