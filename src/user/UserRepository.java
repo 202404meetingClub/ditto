@@ -16,9 +16,13 @@ public class UserRepository {
     static {
         userList = new ArrayList<>();
         admin = new ArrayList<>();
-        userList.add(new User("123", "1234", "12345", 12, "1231231234"));
-        userList.add(new User("234", "2345", "23456", 23, "2342342345"));
         admin.add(new User("admin", "admin", "1q2w3e4r!", 0, "admin"));
+        userList.add(new User("김주성", "1234", "12345", 28, "1231231234"));
+        userList.add(new User("박성진", "2345", "23456", 24, "2342342345"));
+        userList.add(new User("정재한", "3456", "34567", 27, "2342342346"));
+        userList.get(0).setMoney(34000000);
+        userList.get(1).setMoney(23050);
+        userList.get(2).setMoney(60000);
     }
 
 
@@ -74,18 +78,6 @@ public class UserRepository {
         return null;
 
     }
-
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    public void setCurrentUser(User user) {
-        currentUser = user;
-    }
-
-
-
-
 
 
     /**

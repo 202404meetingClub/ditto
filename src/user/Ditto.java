@@ -85,6 +85,14 @@ public class Ditto {
         this.user = user;
     }
 
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
     @Override
     public String toString() {
         return "Ditto{" +

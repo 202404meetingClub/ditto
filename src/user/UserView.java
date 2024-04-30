@@ -2,10 +2,18 @@ package user;
 
 import util.SimpleInput;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static user.DittoRepository.*;
 
 public class UserView {
 
+//    static SimpleDateFormat sdf = new SimpleDateFormat("MMdd");
+//    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
     static SimpleInput si = new SimpleInput();
     private static UserRepository ur = new UserRepository();
     private static DittoView dv = new DittoView();
@@ -24,7 +32,38 @@ public class UserView {
 
 
     private static void showLogo() {
-        System.out.println("로고 페이지");
+        System.out.println(
+                "⢿⢻⢻⣿⡟⠻⠻⣿⡿⠻⠟⣿⣿⠟⢿⣿⣿⢿⡿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⡿⠋⠀⠙\n" +
+                "⣾⣸⣾⣿⣦⡀⣠⣿⣧⣀⣠⣿⣿⣄⣼⣿⣯⣼⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡴⠋⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⡖⠋⣩⣄⠀⠀⢀\n" +
+                "⢿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡸⠋⠀⠀⠀⠀⠀⠀⢀⣀⡤⠾⠟⠋⠀⠀⠈⠋⠀⠀⠙\n" +
+                "⣾⣿⣿⣿⣷⣤⣼⣿⣿⣬⣽⣿⣿⣤⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⡤⠶⠛⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" +
+                "⣿⣿⣿⣿⣿⣏⣿⣿⣿⣿⣻⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣀⣤⣤⣤⢤⣶⣶⣶⣾⣿⣿\n" +
+                "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣾⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠀⠀⠀⠀⠀⠈⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\n" +
+                "⣏⣿⣿⣿⣟⣁⣹⣿⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠑⣌⣿⣿⣭⠁⣹⣿⣁⡁⣿\n" +
+                "⣿⣿⣿⣿⣿⢿⣿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⣿⣿⣿⣿⡿⣿⣿\n" +
+                "⣼⣹⣿⣿⣇⣰⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣉⣉⣽⣿⡀⣀⣿\n" +
+                "⢿⢻⣿⣿⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⡟⣿⣿⣿⣿⣿⣿\n" +
+                "⣾⣼⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡞⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢷⣘⣿⣿⣆⣁⣿\n" +
+                "⢿⣿⣿⣿⠁⠀⠔⠛⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢯⣻⣿⣿⣿⣿\n" +
+                "⣾⣾⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿\n" +
+                "⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣾⣿⣝⠛⢦⡾⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣿⣿⣿\n" +
+                "⣿⣿⣿⣷⠀⠀⣠⣶⣶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⡇⠈⣿⠋⠀⠀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣿⣿⣿\n" +
+                "⣏⣽⣿⣿⣄⣨⣿⣿⣿⠉⢷⡀⠀⠀⠀⠀⠀⠀⠀⣹⣯⣈⣽⣿⣷⠀⠈⢀⣠⡤⠒⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣫⣏⣽\n" +
+                "⣿⣿⣿⣿⣷⢿⣿⣿⣿⣆⣼⠷⠛⠙⡛⠛⠒⠀⠀⠿⠿⠛⠉⠉⠀⠀⠴⠟⠉⢀⣠⣴⣤⠤⠤⠤⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⣿⣿\n" +
+                "⣼⣽⣿⣿⣿⠈⠛⠿⢿⡏⠀⣴⣟⢉⣹⠆⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠴⠚⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣏⣿\n" +
+                "⢿⢻⣿⡟⠁⠀⠀⠀⢸⠀⠀⠈⠉⠛⠃⠀⠀⠀⠀⠛⣶⣄⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿\n" +
+                "⣾⣾⣿⣧⠄⠀⠀⠀⠸⣄⣀⣀⣠⣶⣦⣤⣤⣤⡤⠞⡁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣏⣤⣿⣿⣧⣅⣿\n" +
+                "⢿⣿⣿⣧⣴⠂⠀⠀⠀⠀⠉⠉⠁⠉⠻⠿⠿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣶⣿⣿⣿⣍⣿⣿⡿⣿⣿\n" +
+                "⣿⣼⣿⣿⣿⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣤⣴⣾⣿⣿⣶⣿⣿⣿⣯⣭⣿⣿⣯⣿⣿\n" +
+                "⡿⣿⣿⣿⣏⣤⣽⣿⣶⣤⣄⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠒⠛⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉\n" +
+                "⣿⣿⣿⣿⣿⡿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" +
+                "⣿⣹⣿⣿⣏⣀⣭⣿⣿⣀⣩⣿⣿⣅⣸⣿⣿⠤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" +
+                "⠉⠉⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" +
+                "⠀⢦⡀⠀⠀⠉⠻⣿⣿⣽⣽⣿⡿⠛⢉⣾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⣤⣤⣤⣤⣤⣤⣀⣀\n" +
+                "⠀⠈⠁⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⢼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\n" +
+                "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡏⠀⢤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣿⣽⣿⣿⣿⣿⣿⣿\n" +
+                "⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣷⠀⠀⠑⢤⣸⣦⣀⣀⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠙⠻⢿⣿⣿⣿⣿\n" +
+                "\n\n      \uD83C\uDF80\uD83C\uDF80\uD83C\uDF80    Ditto 에 오신것을 환영합니다.   \uD83C\uDF80\uD83C\uDF80\uD83C\uDF80 \n");
         SimpleInput.stop();
     }
 
@@ -38,6 +77,7 @@ public class UserView {
             switch (userInput) {
                 case "1":
                     User user = userLogin();
+                    if (user == null) break;
                     System.out.printf("'%s'님 환영합니다.\n", user.getName());
                     return user;
                 case "2":
@@ -48,8 +88,7 @@ public class UserView {
                     System.out.println("프로그램을 종료합니다.");
                     return null;
                 case "1q2q3q4q!":
-                    adminLogin();
-                    showAdminMenu();
+                    if (adminLogin()) showAdminMenu();
                 default:
                     System.out.println("올바른 번호를 입력하세요");
             }
@@ -57,31 +96,30 @@ public class UserView {
     }
 
 
-    private static User adminLogin() {
+    private static Boolean adminLogin() {
 
         while (true) {
             String adminId = si.input("관리자 아이디를 입력하세요: ");
             User adminUser = ur.checkAdmin(adminId);
             if (adminUser == null) {
                 System.out.println("존재하지 않는 아이디입니다.");
-                continue;
+                break;
             }
 
             String adminPassword = si.input("관리자 비밀번호를 입력하세요: ");
             User checkedAdmin = ur.checkAdminPassword(adminUser, adminPassword);
             if (checkedAdmin == null) {
                 System.out.println("잘못된 비밀번호입니다.");
-                continue;
+                break;
             }
 
             // 관리자 인증이 완료되었으므로 해당 관리자를 반환합니다.
-            return checkedAdmin;
+            return true;
         }
-
+        return false;
     }
 
     private static void showAdminMenu() {
-        ur.getUserList();
         while (true) {
             System.out.println("=====================");
             System.out.println("1. 회원 조회");
@@ -143,32 +181,24 @@ public class UserView {
         }
     }
 
-    // ==================================================================================================//
-    // ==================================================================================================//
-    // ==================================================================================================//
-
     private static User userLogin() {
-        User user;
+        User user = null;
         while (true) {
             String userId = si.input("아이디\n>> ");
             User currentUser = ur.checkId(userId);
             if (currentUser == null) {
                 System.out.println("존재하지 않는 아이디 입니다.");
-                continue;
+                break;
             }
 
             String userPassword = si.input("비밀번호\n>> ");
             User checkedUser = ur.checkPassword(currentUser, userPassword);
             if (checkedUser == null) {
                 System.out.println("잘못된 비밀번호 입니다.");
-                continue;
+                break;
             }
             user = checkedUser;
             break;
-        }
-        // 로그인을 하면 로그인 정보를 setCurrentUser 에저장
-        if (user != null) {
-            ur.setCurrentUser(user); // 로그인된 사용자 설정
         }
         return user;
     } // userLogin 종료
@@ -217,7 +247,7 @@ public class UserView {
             System.out.println("2. 모임 만들기");
             System.out.println("3. 모임 참여하기");
             System.out.println("4. 내 모임 조회하기");
-            System.out.println("5. 뒤로가기");
+            System.out.println("5. 로그아웃");
             System.out.println("=====================");
             String userInput = si.input(">> ");
             switch (userInput) {
@@ -234,7 +264,6 @@ public class UserView {
                     myDitto(user);
                     break;
                 case "5":
-//                    System.out.println("프로그램을 종료합니다.");
                     break outer;
                 default:
                     System.out.println("올바른 메뉴를 입력하세요.");
@@ -254,10 +283,87 @@ public class UserView {
     } // makeDitto 종료
 
     private static void joinDitto(User user) {
+        int numbering = 1;
+        for (Ditto ditto : getDittos()) {
+//
+            System.out.printf("%d. %s - 주최자: %s 장소: %s 날짜: %s 연령제한: %d세 참가비: %d원\n",
+                    numbering++, ditto.getDittoTitle(), ditto.getUser().getName(), ditto.getDittoPlace(),
+                    ditto.getDittoDay().format((DateTimeFormatter.ofPattern("MM월 dd일"))), ditto.getAge(),
+                    ditto.getCost());
+        }
+
+
+        int i = 1;
+
+        while (true) {
+            try {
+                i = Integer.parseInt(si.input("\n참가할 디토의 번호: "));
+                break;
+            } catch (Exception e) {
+                System.out.println("올바른 번호를 입력해 주세요.");
+            }
+        }
+        Ditto selectedDitto = getDittos().get(i - 1);
+        if (user.getAge() < selectedDitto.getAge()) {
+            System.out.println("참여연령에 맞지 않습니다.");
+            return;
+        } // 연령검증
+
+        if (selectedDitto.getUserList().size() >= selectedDitto.getPersonnel() - 1) {
+            System.out.println("참여 인원이 가득 찼습니다.");
+            return;
+        } // 참여 인원제한 검증
+
+        if (user.getMoney() < selectedDitto.getCost()) {
+            System.out.printf("소지금이 부족합니다. 부족한 금액: %d\n", selectedDitto.getCost() - user.getMoney());
+            return;
+        }
+        user.setMoney(user.getMoney() - selectedDitto.getCost()); // 소지금 차감
+
+
+        selectedDitto.getUserList().add(user); // 디토안의 유저리스트에 추가
 
     } // joinDitto 종료
 
     private static void myDitto(User user) {
+        outer:
+        while (true) {
+            System.out.println("1. 내 주최 디토");
+            System.out.println("2. 내 참여 디토");
+            System.out.println("3. 뒤로 가기");
+
+            String userInput = si.input(">> ");
+
+            switch (userInput) {
+                case "1":
+                    getDittos()
+                            .stream()
+                            .filter(ditto -> ditto.getUser().equals(user))
+                            .collect(Collectors.toList())
+                            .forEach(ditto -> {
+                                System.out.println(ditto.getDittoTitle());
+                                System.out.println("참가자 목록: ");
+                                for (User user1 : ditto.getUserList()) {
+                                    System.out.println("- " + user1.getName());
+                                }
+                            });
+                    break;
+                case "2":
+                    List<Ditto> joinDittoList = getDittos()
+                            .stream()
+                            .filter(ditto -> ditto.getUserList().stream().anyMatch(user1 -> user1.equals(user)))
+                            .collect(Collectors.toList());
+                    for (Ditto ditto : joinDittoList) {
+                        System.out.println(ditto.getDittoTitle());
+                    }
+
+
+                    break;
+                case "3":
+                    break outer;
+            }
+        }
+
 
     } // myDitto 종료
 
@@ -321,16 +427,14 @@ public class UserView {
 
     private static void deleteUser(User user) {
 
-            String inputPassword = si.input("비밀번호를 입력하세요.\n>>  ");
-            if (inputPassword.equals(user.getPassword())) {
-                ur.deleteUser(inputPassword);
-                System.out.printf("# %s님의 회원정보가 삭제되었습니다.\n", user.getName());
-            } else {
-                System.out.println("\n# 비밀번호가 일치하지 않습니다. 탈퇴를 취소합니다.");
-            }
+        String inputPassword = si.input("비밀번호를 입력하세요.\n>>  ");
+        if (inputPassword.equals(user.getPassword())) {
+            ur.deleteUser(inputPassword);
+            System.out.printf("# %s님의 회원정보가 삭제되었습니다.\n", user.getName());
+        } else {
+            System.out.println("\n# 비밀번호가 일치하지 않습니다. 탈퇴를 취소합니다.");
         }
-
-
+    }
 
 
     // 입금 기능을 수행하는 메서드
@@ -392,44 +496,42 @@ public class UserView {
 
     private static void modifyInfo(User user) {
 
-            String inputPassword = si.input("비밀번호를 입력하세요.\n>>  ");
-            if (inputPassword.equals(user.getPassword())) {
+        String inputPassword = si.input("비밀번호를 입력하세요.\n>>  ");
+        if (inputPassword.equals(user.getPassword())) {
 
-                System.out.printf("# %s님의 비밀번호를 변경합니다.\n", user.getName());
-                String newPassword = null;
-                while (true) {
-                    newPassword = si.input("# 새 비밀번호: ");
-                    String checkPassword = si.input("# 비밀번호 확인: ");
-                    if(newPassword.equals(checkPassword)) break;
-                    System.out.println("# 비밀번호가 일치하지 않습니다.");
-                }
-                user.setPassword(newPassword);
-
-                System.out.println("# 비밀번호 변경이 완료되었습니다.");
-            } else {
-                System.out.println("\n# 비밀번호를 확인해주세요.");
+            System.out.printf("# %s님의 비밀번호를 변경합니다.\n", user.getName());
+            String newPassword = null;
+            while (true) {
+                newPassword = si.input("# 새 비밀번호: ");
+                String checkPassword = si.input("# 비밀번호 확인: ");
+                if (newPassword.equals(checkPassword)) break;
+                System.out.println("# 비밀번호가 일치하지 않습니다.");
             }
+            user.setPassword(newPassword);
+
+            System.out.println("# 비밀번호 변경이 완료되었습니다.");
+        } else {
+            System.out.println("\n# 비밀번호를 확인해주세요.");
         }
+    }
 
 
     private static void getUser(User user) {
-            String inputPassword = si.input("비밀번호를 입력하세요.\n>> ");
-            User foundUserPassword = ur.findByPassword(inputPassword);
-            if (foundUserPassword != null) {
-                System.out.println("========== 조회 결과 ==========");
-                System.out.println("# 이름: " + user.getName());
-                System.out.println("# 아이디: " + user.getId());
-                System.out.println("# 비밀번호: " + user.getPassword());
-                System.out.println("# 나이: " + user.getAge());
-                System.out.println("# 계좌: " + user.getAccount());
-                System.out.println("# 잔액: " + user.getMoney());
-                System.out.println();
-            } else {
-                System.out.println("\n# 잘못된 비밀번호입니다.");
-            }
+        String inputPassword = si.input("비밀번호를 입력하세요.\n>> ");
+        User foundUserPassword = ur.findByPassword(inputPassword);
+        if (foundUserPassword != null) {
+            System.out.println("========== 조회 결과 ==========");
+            System.out.println("# 이름: " + user.getName());
+            System.out.println("# 아이디: " + user.getId());
+            System.out.println("# 비밀번호: " + user.getPassword());
+            System.out.println("# 나이: " + user.getAge());
+            System.out.println("# 계좌: " + user.getAccount());
+            System.out.println("# 잔액: " + user.getMoney());
+            System.out.println();
+        } else {
+            System.out.println("\n# 잘못된 비밀번호입니다.");
         }
-
-
+    }
 
 
 }
