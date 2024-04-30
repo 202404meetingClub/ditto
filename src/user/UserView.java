@@ -24,7 +24,7 @@ public class UserView {
         while (true) {
             User loginedUser = showLoginPage();
             if (loginedUser == null) {
-                return;
+                System.exit(0);
             }
             showMainMenu(loginedUser);
         }
@@ -336,28 +336,16 @@ public class UserView {
 
             switch (userInput) {
                 case "1":
-                    getDittos()
-                            .stream()
-                            .filter(ditto -> ditto.getUser().equals(user))
-                            .collect(Collectors.toList())
-                            .forEach(ditto -> {
-                                System.out.println(ditto.getDittoTitle());
-                                System.out.println("참가자 목록: ");
-                                for (User user1 : ditto.getUserList()) {
-                                    System.out.println("- " + user1.getName());
-                                }
-                            });
+                    boolean flag1 = ur.myDittoList(user);
+                    if(!flag1) {
+                        System.out.println("내 주최 디토가 없습니다.");
+                    }
                     break;
                 case "2":
-                    List<Ditto> joinDittoList = getDittos()
-                            .stream()
-                            .filter(ditto -> ditto.getUserList().stream().anyMatch(user1 -> user1.equals(user)))
-                            .collect(Collectors.toList());
-                    for (Ditto ditto : joinDittoList) {
-                        System.out.println(ditto.getDittoTitle());
+                    boolean flag2 = ur.joinDittoList(user);
+                    if(!flag2) {
+                        System.out.println("내 참여 디토가 없습니다.");
                     }
-
-
                     break;
                 case "3":
                     break outer;
@@ -430,7 +418,9 @@ public class UserView {
         String inputPassword = si.input("비밀번호를 입력하세요.\n>>  ");
         if (inputPassword.equals(user.getPassword())) {
             ur.deleteUser(user);
-            System.out.printf("# %s님의 회원정보가 삭제되었습니다.\n", user.getName());
+            System.out.printf("# %s님의 회원정보가 삭제되었습니다.\n# 초기화면으로 돌아갑니다.\n", user.getName());
+            si.stop();
+            start();
         } else {
             System.out.println("\n# 비밀번호가 일치하지 않습니다. 탈퇴를 취소합니다.");
         }

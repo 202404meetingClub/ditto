@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static user.DittoRepository.getDittos;
+
 public class UserRepository {
 
     private static List<User> userList;
@@ -130,6 +132,36 @@ public class UserRepository {
 
     public void deleteUser(User user) {
         userList.remove(user);
+    }
+
+    public boolean myDittoList(User user) {
+        getDittos()
+                .stream()
+                .filter(ditto -> ditto.getUser().equals(user))
+                .collect(Collectors.toList())
+                .forEach(ditto -> {
+                    System.out.println(ditto.getDittoTitle());
+                    System.out.println("참가자 목록: ");
+                    for (User user1 : ditto.getUserList()) {
+                        System.out.println("- " + user1.getName());
+                    }
+                });
+        if(getDittos().stream().filter(ditto -> ditto.getUser().equals(user)).collect(Collectors.toList()).size() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean joinDittoList(User user) {
+        List<Ditto> joinDittoList = getDittos()
+                .stream()
+                .filter(ditto -> ditto.getUserList().stream().anyMatch(user1 -> user1.equals(user)))
+                .collect(Collectors.toList());
+        for (Ditto ditto : joinDittoList) {
+            System.out.println(ditto.getDittoTitle());
+        }
+        if(joinDittoList.size() == 0) return false;
+        return true;
     }
 }
 
