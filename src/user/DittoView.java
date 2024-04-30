@@ -73,8 +73,9 @@ public class DittoView {
                 System.out.println("본인의 소지금보다 높은 참가회비는 지정하실 수 없습니다.");
                 System.out.println("디토 계좌를 충전해주세요.");
                 inputCost = -1;
-            }
+            }else {
                 user.setMoney(user.getMoney() - inputCost);
+            }
             } catch (Exception e) {
                 System.out.println("올바른 숫자를 입력해주세요.");
             }
