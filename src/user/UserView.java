@@ -92,6 +92,7 @@ public class UserView {
                 default:
                     System.out.println("올바른 번호를 입력하세요");
             }
+            si.stop();
         }
     }
 
@@ -206,11 +207,25 @@ public class UserView {
 
     private static void userJoin() {
         System.out.println("회원가입하기");
-        String userName = si.input("이름 : ");
+
+        // 이름 공백검증
+        String userName = null;
+        while (true) {
+            userName = si.input("이름 : ");
+            if (userName.length() == 0) {
+                System.out.println("이름을 입력해 주세요.");
+            } else break;
+
+        }
 
         String userId; // 여기는 중복검증 해야함
         while (true) {
             String inputId = si.input("아이디 : ");
+            // 아이디 공백검증
+            if (inputId.length() == 0) {
+                System.out.println("아이디를 입력해 주세요.");
+                continue;
+            }
             boolean flag = ur.getUserList().stream().anyMatch(user -> user.getId().equals(inputId));
             if (!flag) {
                 userId = inputId;
@@ -219,7 +234,15 @@ public class UserView {
                 System.out.println("중복된 아이디입니다.");
             }
         }
-        String userPassword = si.input("비밀번호 : ");
+
+        // 비밀번호 공백검증
+        String userPassword = null;
+        while (true) {
+            userPassword = si.input("비밀번호 : ");
+            if (userPassword.length() == 0) {
+                System.out.println("비밀번호를 입력해 주세요.");
+            } else break;
+        }
         int age = 0;
         while (true) {
             try {
@@ -259,6 +282,7 @@ public class UserView {
                     break;
                 case "3":
                     joinDitto(user);
+                    si.stop();
                     break;
                 case "4":
                     myDitto(user);
@@ -285,13 +309,14 @@ public class UserView {
     private static void joinDitto(User user) {
         int numbering = 1;
         for (Ditto ditto : getDittos()) {
-//
+
+
             System.out.printf("%d. %s - 주최자: %s 장소: %s 날짜: %s 연령제한: %d세 참가비: %d원\n",
                     numbering++, ditto.getDittoTitle(), ditto.getUser().getName(), ditto.getDittoPlace(),
                     ditto.getDittoDay().format((DateTimeFormatter.ofPattern("MM월 dd일"))), ditto.getAge(),
                     ditto.getCost());
         }
-
+        System.out.printf("\n현재 내 소지금: %d원", user.getMoney());
 
         int i = 1;
         Ditto selectedDitto = null;
@@ -312,31 +337,44 @@ public class UserView {
 
             }
         }
+
         if (user.getAge() < selectedDitto.getAge()) {
             System.out.println("참여연령에 맞지 않습니다.");
             return;
         } // 연령검증
 
-        if (selectedDitto.getUserList().size() >= selectedDitto.getPersonnel() - 1) {
+        if (selectedDitto.getUserList().size() >= selectedDitto.getPersonnel()) {
             System.out.println("참여 인원이 가득 찼습니다.");
             return;
         } // 참여 인원제한 검증
 
+        if (selectedDitto.getUser().equals(user)) {
+            System.out.println("자신이 만든 디토에는 참여할 수 없습니다.");
+            return;
+        } // 작성자 검증
+
+        if (selectedDitto.getUserList().stream().anyMatch(user1 -> user1.equals(user))) {
+            System.out.println("이미 참여한 디토입니다.");
+            return;
+        } // 중복참여 검증
+
         if (user.getMoney() < selectedDitto.getCost()) {
             System.out.printf("소지금이 부족합니다. 부족한 금액: %d\n", selectedDitto.getCost() - user.getMoney());
             return;
-        }
+        } // 소지금 검증
+
         user.setMoney(user.getMoney() - selectedDitto.getCost()); // 소지금 차감
 
 
         selectedDitto.getUserList().add(user); // 디토안의 유저리스트에 추가
+        System.out.printf("'%s'디토에 참가하였습니다. 내 디토 계좌에서 %d원이 사용되었습니다.\n", selectedDitto.getDittoTitle(), selectedDitto.getCost());
 
     } // joinDitto 종료
 
     private static void myDitto(User user) {
         outer:
         while (true) {
-            System.out.println("1. 내 주최 디토");
+            System.out.println("1. 내 디토 참여자 보기");
             System.out.println("2. 내 참여 디토");
             System.out.println("3. 뒤로 가기");
 
@@ -358,6 +396,7 @@ public class UserView {
                 case "3":
                     break outer;
             }
+            si.stop();
         }
 
 
@@ -377,15 +416,18 @@ public class UserView {
             switch (userInput) {
                 case "1":
                     getUser(user);
+                    si.stop();
                     break;
                 case "2":
                     modifyInfo(user);
+                    si.stop();
                     break;
                 case "3":
                     depositAndWithdrawal(user);
                     break;
                 case "4":
                     balanceCheck(user);
+                    si.stop();
                     break;
                 case "5":
                     deleteUser(user);
@@ -409,9 +451,11 @@ public class UserView {
             switch (userInput) {
                 case "1":
                     deposit(user);
+                    si.stop();
                     break;
                 case "2":
                     withdrawal(user);
+                    si.stop();
                     break;
                 case "3":
                     break outer;
@@ -425,8 +469,15 @@ public class UserView {
 
         String inputPassword = si.input("비밀번호를 입력하세요.\n>>  ");
         if (inputPassword.equals(user.getPassword())) {
+            setDittos(getDittos().stream().filter(ditto -> !ditto.getUser().equals(user)).collect(Collectors.toList()));
+            // 본인의 디토를 제외한 다른사람의 디토만 리스트로 만들어서 덮어씌움
+            getDittos().stream().forEach(ditto -> {
+                ditto.getUserList().remove(user);
+            });
+            // 유저가 탈퇴하면 참가한 디토에서 자신을 삭제
             ur.deleteUser(user);
             System.out.printf("# %s님의 회원정보가 삭제되었습니다.\n# 초기화면으로 돌아갑니다.\n", user.getName());
+
             si.stop();
             start();
         } else {
@@ -437,6 +488,7 @@ public class UserView {
 
     // 입금 기능을 수행하는 메서드
     private static void deposit(User user) {
+        System.out.printf("내 디토 계좌: %s\n", user.getAccount());
         System.out.println("입금할 금액을 입력하세요.");
         int deposit;
         // 사용자가 유효한 금액을 입력할 때까지 반복하여 입력을 받기.
@@ -456,6 +508,7 @@ public class UserView {
         // 사용자의 잔액에 입력받은 금액 추가
         user.setMoney(user.getMoney() + deposit);
         System.out.printf("%d원이 입금되었습니다.\n", deposit);
+        System.out.printf("입금 후 잔액: %d원\n", user.getMoney());
     }
 
     // 출금 기능을 수행하는 메서드.
@@ -480,6 +533,7 @@ public class UserView {
         if (user.getMoney() >= withdrawal) {
             user.setMoney(user.getMoney() - withdrawal);
             System.out.printf("%d원이 출금되었습니다.\n", withdrawal);
+            System.out.printf("현재 내 잔액: %d원\n", user.getMoney());
         } else {
             System.out.println("잔액이 부족합니다.");
         }
@@ -501,6 +555,10 @@ public class UserView {
             String newPassword = null;
             while (true) {
                 newPassword = si.input("# 새 비밀번호: ");
+                if(newPassword.length() == 0) {
+                    System.out.println("새 비밀번호를 입력해 주세요");
+                    continue;
+                }
                 String checkPassword = si.input("# 비밀번호 확인: ");
                 if (newPassword.equals(checkPassword)) break;
                 System.out.println("# 비밀번호가 일치하지 않습니다.");
@@ -522,9 +580,9 @@ public class UserView {
             System.out.println("# 이름: " + user.getName());
             System.out.println("# 아이디: " + user.getId());
             System.out.println("# 비밀번호: " + user.getPassword());
-            System.out.println("# 나이: " + user.getAge());
+            System.out.println("# 나이: " + user.getAge() + "세");
             System.out.println("# 계좌: " + user.getAccount());
-            System.out.println("# 잔액: " + user.getMoney());
+            System.out.println("# 잔액: " + user.getMoney() + "원");
             System.out.println();
         } else {
             System.out.println("\n# 잘못된 비밀번호입니다.");

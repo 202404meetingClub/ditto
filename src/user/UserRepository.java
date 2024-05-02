@@ -19,9 +19,9 @@ public class UserRepository {
         userList = new ArrayList<>();
         admin = new ArrayList<>();
         admin.add(new User("admin", "admin", "1q2w3e4r!", 0, "admin"));
-        userList.add(new User("김주성", "1234", "12345", 28, "1231231234"));
-        userList.add(new User("박성진", "2345", "23456", 24, "2342342345"));
-        userList.add(new User("정재한", "3456", "34567", 27, "2342342346"));
+        userList.add(new User("김주성", "1234", "12345", 28, "602-1231234"));
+        userList.add(new User("박성진", "2345", "23456", 24, "602-2342345"));
+        userList.add(new User("정재한", "3456", "34567", 27, "602-2342346"));
         userList.get(0).setMoney(34000000);
         userList.get(1).setMoney(23050);
         userList.get(2).setMoney(60000);
@@ -58,7 +58,7 @@ public class UserRepository {
         String userAccount;
         while (true) {
             int randomNumber = (int) Math.floor(Math.random() * 1000000);
-            String randomAccount = "602" + Integer.toString(randomNumber);
+            String randomAccount = "602-" + Integer.toString(randomNumber);
 
             boolean flag = userList.stream().anyMatch(user -> user.getAccount().equals(randomAccount));
             if (!flag) {
@@ -67,6 +67,7 @@ public class UserRepository {
             }
         }
         userList.add(new User(name, id, password, age, userAccount));
+        System.out.printf("내 디토 계좌: %s\n", userAccount);
     }
 
 
@@ -135,18 +136,20 @@ public class UserRepository {
     }
 
     public boolean myDittoList(User user) {
+
         getDittos()
                 .stream()
                 .filter(ditto -> ditto.getUser().equals(user))
                 .collect(Collectors.toList())
                 .forEach(ditto -> {
-                    System.out.println(ditto.getDittoTitle());
-                    System.out.println("참가자 목록: ");
+                    System.out.printf("\n- %s \n", ditto.getDittoTitle());
+                    System.out.print("참가자 목록:");
                     for (User user1 : ditto.getUserList()) {
-                        System.out.println("- " + user1.getName());
+                        System.out.print(" " + user1.getName());
                     }
+                    System.out.print("\n");
                 });
-        if(getDittos().stream().filter(ditto -> ditto.getUser().equals(user)).collect(Collectors.toList()).size() == 0) {
+        if (getDittos().stream().filter(ditto -> ditto.getUser().equals(user)).collect(Collectors.toList()).size() == 0) {
             return false;
         }
         return true;
@@ -158,9 +161,13 @@ public class UserRepository {
                 .filter(ditto -> ditto.getUserList().stream().anyMatch(user1 -> user1.equals(user)))
                 .collect(Collectors.toList());
         for (Ditto ditto : joinDittoList) {
-            System.out.println(ditto.getDittoTitle());
+            System.out.println("- "+ditto.getDittoTitle() );
+            System.out.println("날짜: " + ditto.getDittoDay());
+            System.out.println("장소: " + ditto.getDittoPlace());
+            System.out.printf("참여 인원: %d / %d\n\n", ditto.getUserList().size(), ditto.getPersonnel());
         }
-        if(joinDittoList.size() == 0) return false;
+
+        if (joinDittoList.size() == 0) return false;
         return true;
     }
 }

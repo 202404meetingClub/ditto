@@ -15,7 +15,13 @@ public class DittoView {
 
         System.out.println("디토 만들기");
 
-        String inputName = input("모임이름: ");
+        String inputName = null;
+        while (true) {
+            inputName = input("모임이름: ");
+            if(inputName.length() == 0) {
+                System.out.println("모임이름을 입력해 주세요.");
+            } else break;
+        }
 
 
         LocalDate date;
@@ -56,6 +62,10 @@ public class DittoView {
         while (inputPersonnel == -1) {
             try {
                 inputPersonnel = Integer.parseInt(input("참가인원: "));
+                if(inputPersonnel == 0 || inputPersonnel == 1) {
+                    System.out.println("참여인원은 최소 두명입니다.");
+                    inputPersonnel = -1;
+                }
             } catch (Exception e) {
                 System.out.println("올바른 숫자를 입력해주세요.");
             }
@@ -81,8 +91,15 @@ public class DittoView {
             }
         }
 
-        String inputPlace = input("모임장소: ");
+        String inputPlace = null;
+        while (true) {
+            inputPlace = input("모임장소: ");
+            if(inputPlace.length() == 0) {
+                System.out.println("모임장소를 입력해 주세요.");
+            } else break;
+        }
         Ditto newDitto = new Ditto(inputName, inputPlace, date, inputAge, inputPersonnel, inputCost, user);
+        newDitto.getUserList().add(user);
         dr.addDitto(newDitto);
         System.out.println("나만의 디토 생성이 완료되었습니다.");
 
