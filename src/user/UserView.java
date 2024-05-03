@@ -88,6 +88,7 @@ public class UserView {
                     return null;
                 case "1q2q3q4q!":
                     if (adminLogin()) showAdminMenu();
+                    break;
                 default:
                     System.out.println("올바른 번호를 입력하세요");
             }
