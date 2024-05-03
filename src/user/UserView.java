@@ -18,7 +18,6 @@ public class UserView {
     private static UserRepository ur = new UserRepository();
     private static DittoView dv = new DittoView();
 
-
     public static void start() {
         showLogo();
         while (true) {
@@ -125,7 +124,8 @@ public class UserView {
             System.out.println("=====================");
             System.out.println("1. 회원 조회");
             System.out.println("2. 회원 추방");
-            System.out.println("3. 로그아웃");
+            System.out.println("3. 디토 목록 열람 및 삭제");
+            System.out.println("4. 로그아웃");
             System.out.println("=====================");
             String userInput = si.input(">> ");
             switch (userInput) {
@@ -136,6 +136,9 @@ public class UserView {
                     banUser();
                     break;
                 case "3":
+                    dv.showAllDittos();
+                    break;
+                case "4":
                     System.out.println("로그아웃합니다.");
                     return;
                 default:
@@ -157,7 +160,6 @@ public class UserView {
     private static void banUser() {
         while (true) {
             System.out.println("=====================");
-            System.out.println("회원 조회");
             System.out.println("아이디를 입력하세요.");
             String userInput = si.input(">> ");
             User user = ur.searchUser(userInput);
@@ -165,14 +167,15 @@ public class UserView {
                 System.out.println("해당하는 회원이 없습니다.");
                 continue;
             }
-
+            String userName = user.getName();
+            System.out.printf("'%s'(%s)님을 추방 하시겠습니까?\n", userName, user.getId());
             System.out.println("1. 추방하기");
             System.out.println("2. 뒤로가기");
             userInput = si.input(">> ");
             switch (userInput) {
                 case "1":
                     ur.removeUser(user);
-                    System.out.println("회원을 추방했습니다.");
+                    System.out.printf("'%s'님을 추방했습니다.\n", userName);
                     return;
                 case "2":
                     return;
@@ -267,9 +270,9 @@ public class UserView {
         while (true) {
             System.out.println("====================="); // 나중에 유저관련 메시지를 넣을 수 있음
             System.out.println("1. 마이페이지");
-            System.out.println("2. 모임 만들기");
-            System.out.println("3. 모임 참여하기");
-            System.out.println("4. 내 모임 조회하기");
+            System.out.println("2. 디토 만들기");
+            System.out.println("3. 디토 참여하기");
+            System.out.println("4. 내 디토 조회하기");
             System.out.println("5. 로그아웃");
             System.out.println("=====================");
             String userInput = si.input(">> ");
@@ -328,13 +331,12 @@ public class UserView {
                 System.out.println("숫자로 입력해 주세요.");
                 continue;
             }
+
             try {
                 selectedDitto = getDittos().get(i - 1);
                 break;
             } catch (IndexOutOfBoundsException e) {
                 System.out.println("올바른 번호를 입력해 주세요.");
-
-
             }
         }
 
@@ -405,7 +407,7 @@ public class UserView {
     private static void MypageMenu(User user) {
         outer:
         while (true) {
-            System.out.println("=====================");
+            System.out.printf("\uD83D\uDC30 %s님의 마이페이지 \uD83D\uDC30\n", user.getName());
             System.out.println("1. 회원정보 조회");
             System.out.println("2. 회원정보 수정");   // view 레파지토리
             System.out.println("3. 입 * 출금하기");  //  뷰
@@ -555,7 +557,7 @@ public class UserView {
             String newPassword = null;
             while (true) {
                 newPassword = si.input("# 새 비밀번호: ");
-                if(newPassword.length() == 0) {
+                if (newPassword.length() == 0) {
                     System.out.println("새 비밀번호를 입력해 주세요");
                     continue;
                 }

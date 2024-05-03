@@ -68,14 +68,12 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                ", id='" + id + '\'' +
-                ", password='" + password + '\'' +
-                ", age=" + age +
-                ", account='" + account + '\'' +
-                ", money=" + money +
-                '}';
+        return "이름: " + name +
+                " ID: " + id  +
+                " 비밀번호: " + password +
+                " 나이: " + age + "세" +
+                " 계좌: " + account +
+                " 잔액: " + money + "원";
     }
 
     // 회원의 비밀번호를 수정하는 메서드

@@ -34,4 +34,8 @@ public class DittoRepository {
     public void addDitto(Ditto ditto) {
         dittos.add(ditto);
     }
+
+    public void deleteDitto(Ditto selectDitto) {
+        getDittos().remove(selectDitto);
+    }
 }

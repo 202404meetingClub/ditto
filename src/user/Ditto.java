@@ -95,14 +95,22 @@ public class Ditto {
 
     @Override
     public String toString() {
-        return "Ditto{" +
-                "dittoTitle='" + dittoTitle + '\'' +
-                ", dittoPlace='" + dittoPlace + '\'' +
-                ", dittoDay=" + dittoDay +
-                ", age=" + age +
-                ", personnel=" + personnel +
-                ", cost=" + cost +
-                ", user=" + user +
-                '}';
+        return "\n\uD83D\uDC30" + dittoTitle + "\uD83D\uDC30" +
+                "\n디토장소: " + dittoPlace +
+                "\n디토데이: " + dittoDay +
+                "\n최소연령: " + age + "세" +
+                "\n목표인원: " + personnel + "명" +
+                "\n참가비: " + cost + "원" +
+                "\n주최자 ID: " + user.getId() +
+                "\n참가자: " + dittoUserList(userList);
+    }
+
+    private String dittoUserList(List<User> userList) {
+        String result = "";
+        for (User user1 : userList) {
+            result += user1.getName() + " ";
+        }
+
+        return result;
     }
 }
