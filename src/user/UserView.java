@@ -585,7 +585,6 @@ public class UserView {
             System.out.println("# 비밀번호: " + user.getPassword());
             System.out.println("# 나이: " + user.getAge() + "세");
             System.out.println("# 계좌: " + user.getAccount());
-            System.out.println("# 잔액: " + user.getMoney() + "원");
             System.out.println();
         } else {
             System.out.println("\n# 잘못된 비밀번호입니다.");
